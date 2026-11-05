@@ -54,7 +54,7 @@ fn is_column_header(line: &str, width: usize) -> bool {
             .enumerate()
             .all(|(index, column)| *column == b'0' + (index % 10) as u8)
 }
-
+// reads the board width and height
 pub fn parse_board<R: BufRead>(lines: &mut R, header: &str) -> Result<Board, String> {
     let (width, height) = dimensions(header, "Anfield ").ok_or("invalid Anfield header")?;
     if width == 0 || height == 0 {
@@ -101,7 +101,7 @@ pub fn parse_board<R: BufRead>(lines: &mut R, header: &str) -> Result<Board, Str
         cells,
     })
 }
-
+// reads the piece dimen
 pub fn parse_piece<R: BufRead>(lines: &mut R, header: &str) -> Result<Piece, String> {
     let (width, height) = dimensions(header, "Piece ").ok_or("invalid Piece header")?;
     if width == 0 || height == 0 {
@@ -137,7 +137,7 @@ fn player_markers(player: u8) -> (char, char, char, char) {
         ('$', 's', '@', 'a')
     }
 }
-
+// 
 pub fn is_legal(board: &Board, piece: &Piece, player: u8, x: usize, y: usize) -> bool {
     if !matches!(player, 1 | 2)
         || x > board.width
@@ -194,7 +194,7 @@ fn open_space_scores(board: &Board) -> Vec<Vec<i64>> {
     }
     scores
 }
-
+// it scans top to bottom and left to right for each row
 pub fn choose_placement(board: &Board, piece: &Piece, player: u8) -> Option<Placement> {
     if board.width == 0 || board.height == 0 || piece.width == 0 || piece.height == 0 {
         return None;
@@ -248,7 +248,7 @@ pub fn choose_placement(board: &Board, piece: &Piece, player: u8) -> Option<Plac
     }
     best.map(|(_, placement)| placement)
 }
-
+// this is where it reads the player num from the input 
 pub fn player_number(line: &str) -> Option<u8> {
     line.split_whitespace()
         .find_map(|token| token.strip_prefix('p')?.parse::<u8>().ok())
